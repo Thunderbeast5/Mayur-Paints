@@ -53,7 +53,8 @@ const allowedOrigins = [
   'http://localhost:5174', 
   'http://localhost:3000',
   'https://mayur-paints.onrender.com',
-  'https://www.mayurpaints.shop'  // Production frontend
+  'https://www.mayurpaints.shop',
+  'https://mayur-paints-1.onrender.com/'  // Production frontend
 ]
 
 app.use(cors({
