@@ -73,7 +73,7 @@ function AdminDashboard({ currentUser, userRole }) {
   async function handleDeleteProduct(type, id) {
     if (!window.confirm(`Delete this ${type.toLowerCase()}? This cannot be undone.`)) return
     try {
-      if (type === 'Paint') { const { paintsAPI } = await import('../api'); await paintsAPI.delete(id) }
+      if (type?.toLowerCase() === 'paint') { const { paintsAPI } = await import('../api'); await paintsAPI.delete(id) }
       else { const { hardwareAPI } = await import('../api'); await hardwareAPI.delete(id) }
       const inv = await inventoryAPI.getSummary(); setInventory(inv)
     } catch (e) { console.error(e) }
@@ -85,7 +85,7 @@ function AdminDashboard({ currentUser, userRole }) {
 
   const revenueArray = analytics.monthlyRevenue || analytics.revenueData || []
   const maxRevenue = revenueArray.length > 0 ? Math.max(...revenueArray.map(d => d.revenue || d.value || 0)) : 1
-  const filteredProducts = (inventory.products || inventory.data || []).filter(p => productFilter === 'All' || p.type === productFilter)
+  const filteredProducts = (inventory.products || inventory.data || []).filter(p => productFilter === 'All' || p.type?.toLowerCase() === productFilter.toLowerCase())
   const avgOrderValue = analytics.totalOrders > 0 ? Math.round(analytics.totalRevenue / analytics.totalOrders) : 0
 
   return (
@@ -239,7 +239,7 @@ function AdminDashboard({ currentUser, userRole }) {
                           return (
                             <tr key={`${p.type}-${pid}`} className="hover:bg-slate-800/30 transition-colors">
                               <td className="px-6 py-4 font-bold">{p.name}</td>
-                              <td className="px-4 py-4"><span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${p.type === 'Paint' ? 'text-primary bg-primary/10' : 'text-emerald-400 bg-emerald-400/10'}`}>{p.type}</span></td>
+                              <td className="px-4 py-4"><span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${p.type?.toLowerCase() === 'paint' ? 'text-primary bg-primary/10' : 'text-emerald-400 bg-emerald-400/10'}`}>{p.type}</span></td>
                               <td className="px-4 py-4 text-slate-400">{p.category}</td>
                               <td className="px-4 py-4 text-right font-bold">₹{p.price.toLocaleString()}</td>
                               <td className={`px-4 py-4 text-right font-bold ${isLow ? 'text-amber-400' : ''}`}>{p.stock}</td>
