@@ -42,7 +42,9 @@ function AdminDashboard({ currentUser, userRole }) {
     setLoading(true)
     try {
       if (activeTab === 'dashboard' || activeTab === 'products') {
-        const inv = await inventoryAPI.getSummary(); setInventory(inv)
+        const inv = await inventoryAPI.getSummary()
+        console.log('Inventory data:', inv)
+        setInventory(inv)
       }
       if (activeTab === 'dashboard' || activeTab === 'orders') {
         const ords = await ordersAPI.getAll(); setOrders(Array.isArray(ords) ? ords : [])
@@ -56,7 +58,10 @@ function AdminDashboard({ currentUser, userRole }) {
       if (activeTab === 'alerts') {
         const al = await alertsAPI.getLowStock(); setAlerts(al)
       }
-    } catch (e) { console.error('Admin load error:', e) }
+    } catch (e) { 
+      console.error('Admin load error:', e)
+      console.error('Error details:', e.message)
+    }
     setLoading(false)
   }
 
@@ -215,6 +220,7 @@ function AdminDashboard({ currentUser, userRole }) {
                     <div>
                       <h3 className="font-bold text-lg">Product Management</h3>
                       <p className="text-sm text-slate-500">{inventory.totalProducts} products · Stock Value: ₹{(inventory.totalStockValue/100000).toFixed(1)}L</p>
+                      {process.env.NODE_ENV === 'development' && <p className="text-xs text-amber-400 mt-2">DEBUG: filteredProducts={filteredProducts.length}, inventory.products={inventory.products?.length}, filter={productFilter}</p>}
                     </div>
                     <div className="flex gap-1 bg-slate-800 rounded-xl p-1">
                       {['All','Paint','Hardware'].map((f) => (
@@ -233,28 +239,36 @@ function AdminDashboard({ currentUser, userRole }) {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-800/50">
-                        {filteredProducts.map((p) => {
-                          const isLow = p.stock <= (p.minStock || 20)
-                          const pid = p._id || p.id
-                          return (
-                            <tr key={`${p.type}-${pid}`} className="hover:bg-slate-800/30 transition-colors">
-                              <td className="px-6 py-4 font-bold">{p.name}</td>
-                              <td className="px-4 py-4"><span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${p.type?.toLowerCase() === 'paint' ? 'text-primary bg-primary/10' : 'text-emerald-400 bg-emerald-400/10'}`}>{p.type}</span></td>
-                              <td className="px-4 py-4 text-slate-400">{p.category}</td>
-                              <td className="px-4 py-4 text-right font-bold">₹{p.price.toLocaleString()}</td>
-                              <td className={`px-4 py-4 text-right font-bold ${isLow ? 'text-amber-400' : ''}`}>{p.stock}</td>
-                              <td className="px-4 py-4 text-center">
-                                <span className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded-full ${isLow ? 'text-amber-400 bg-amber-400/10' : statusColors[p.status] || statusColors.active}`}>{isLow ? 'Low Stock' : 'Active'}</span>
-                              </td>
-                              <td className="px-6 py-4 text-center">
-                                <div className="flex items-center justify-center gap-1">
-                                  <button className="p-2 rounded-lg hover:bg-slate-800 transition-colors"><span className="material-symbols-outlined text-slate-400 text-lg">edit</span></button>
-                                  <button onClick={() => handleDeleteProduct(p.type, pid)} className="p-2 rounded-lg hover:bg-red-400/10 transition-colors"><span className="material-symbols-outlined text-slate-400 hover:text-red-400 text-lg">delete</span></button>
-                                </div>
-                              </td>
-                            </tr>
-                          )
-                        })}
+                        {filteredProducts.length === 0 ? (
+                          <tr>
+                            <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
+                              {inventory.products?.length === 0 ? 'No products loaded. Check browser console for errors.' : 'No products match filter.'}
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredProducts.map((p) => {
+                            const isLow = p.stock <= (p.minStock || 20)
+                            const pid = p._id || p.id
+                            return (
+                              <tr key={`${p.type}-${pid}`} className="hover:bg-slate-800/30 transition-colors">
+                                <td className="px-6 py-4 font-bold">{p.name}</td>
+                                <td className="px-4 py-4"><span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${p.type?.toLowerCase() === 'paint' ? 'text-primary bg-primary/10' : 'text-emerald-400 bg-emerald-400/10'}`}>{p.type}</span></td>
+                                <td className="px-4 py-4 text-slate-400">{p.category}</td>
+                                <td className="px-4 py-4 text-right font-bold">₹{p.price.toLocaleString()}</td>
+                                <td className={`px-4 py-4 text-right font-bold ${isLow ? 'text-amber-400' : ''}`}>{p.stock}</td>
+                                <td className="px-4 py-4 text-center">
+                                  <span className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded-full ${isLow ? 'text-amber-400 bg-amber-400/10' : statusColors[p.status] || statusColors.active}`}>{isLow ? 'Low Stock' : 'Active'}</span>
+                                </td>
+                                <td className="px-6 py-4 text-center">
+                                  <div className="flex items-center justify-center gap-1">
+                                    <button className="p-2 rounded-lg hover:bg-slate-800 transition-colors"><span className="material-symbols-outlined text-slate-400 text-lg">edit</span></button>
+                                    <button onClick={() => handleDeleteProduct(p.type, pid)} className="p-2 rounded-lg hover:bg-red-400/10 transition-colors"><span className="material-symbols-outlined text-slate-400 hover:text-red-400 text-lg">delete</span></button>
+                                  </div>
+                                </td>
+                              </tr>
+                            )
+                          })
+                        )}
                       </tbody>
                     </table>
                   </div>
