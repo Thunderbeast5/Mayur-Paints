@@ -1,0 +1,98 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "#ec5b13",
+          50:  "#fff7f3",
+          100: "#ffe8d9",
+          200: "#ffc9a8",
+          300: "#ffa06e",
+          400: "#ff7033",
+          500: "#ec5b13",
+          600: "#c44a0a",
+          700: "#9c3a07",
+          800: "#7a2d06",
+          900: "#5c2205",
+        },
+        "background-light": "#f8f6f6",
+        "background-dark":  "#0a0f1e",
+        "surface-light":    "#fcfafa",
+        "surface-dark":     "#111827",
+        "border-light":     "#e5e1e0",
+        "border-dark":      "#1e293b",
+      },
+      fontFamily: {
+        display: ["Public Sans", "sans-serif"],
+        sans:    ["Public Sans", "sans-serif"],
+      },
+      fontSize: {
+        "2xs": ["0.625rem", { lineHeight: "1rem" }],
+      },
+      borderRadius: {
+        "4xl": "2rem",
+        "5xl": "2.5rem",
+      },
+      boxShadow: {
+        "neumorphic-flat":    "6px 6px 14px #e0dede, -6px -6px 14px #ffffff",
+        "neumorphic-pressed": "inset 4px 4px 10px #e0dede, inset -4px -4px 10px #ffffff",
+        "neumorphic-raised":  "10px 10px 20px #d1cfcf, -10px -10px 20px #ffffff",
+        "card":               "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        "card-hover":         "0 10px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)",
+        "primary-sm":         "0 4px 14px rgba(236,91,19,0.25)",
+        "primary-md":         "0 8px 24px rgba(236,91,19,0.30)",
+        "primary-lg":         "0 16px 40px rgba(236,91,19,0.35)",
+        "glow":               "0 0 20px rgba(236,91,19,0.4), 0 0 40px rgba(236,91,19,0.2)",
+      },
+      backgroundImage: {
+        "primary-gradient":  "linear-gradient(135deg, #ec5b13 0%, #f97316 50%, #fbbf24 100%)",
+        "dark-gradient":     "linear-gradient(135deg, #0a0f1e 0%, #1e293b 100%)",
+        "hero-gradient":     "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
+        "card-gradient":     "linear-gradient(145deg, #ffffff 0%, #f8f6f6 100%)",
+        "shimmer":           "linear-gradient(90deg, transparent 25%, rgba(236,91,19,0.08) 50%, transparent 75%)",
+      },
+      spacing: {
+        "13": "3.25rem",
+        "15": "3.75rem",
+        "18": "4.5rem",
+        "22": "5.5rem",
+        "26": "6.5rem",
+        "30": "7.5rem",
+      },
+      transitionDuration: {
+        "400": "400ms",
+      },
+      animation: {
+        "fade-in":       "fadeIn 0.4s ease-out both",
+        "slide-down":    "slideDown 0.25s ease-out both",
+        "slide-up":      "slideUp 0.5s ease-out both",
+        "scale-in":      "scaleIn 0.35s ease-out both",
+        "float":         "float 4s ease-in-out infinite",
+        "spin-slow":     "spinSlow 10s linear infinite",
+        "pulse-slow":    "pulse 3s ease-in-out infinite",
+        "bounce-subtle": "bounceSoft 0.4s ease-out",
+        "shimmer":       "shimmer 2.5s infinite",
+      },
+      keyframes: {
+        fadeIn:      { from: { opacity: "0", transform: "translateY(8px)" },  to: { opacity: "1", transform: "translateY(0)" } },
+        slideDown:   { from: { opacity: "0", transform: "translateY(-8px)" }, to: { opacity: "1", transform: "translateY(0)" } },
+        slideUp:     { from: { opacity: "0", transform: "translateY(24px)" }, to: { opacity: "1", transform: "translateY(0)" } },
+        scaleIn:     { from: { opacity: "0", transform: "scale(0.94)" },      to: { opacity: "1", transform: "scale(1)" } },
+        float:       { "0%, 100%": { transform: "translateY(0)" },            "50%": { transform: "translateY(-8px)" } },
+        spinSlow:    { from: { transform: "rotate(0deg)" },                   to: { transform: "rotate(360deg)" } },
+        bounceSoft:  { "0%, 100%": { transform: "scale(1)" },                 "50%": { transform: "scale(1.12)" } },
+        shimmer:     { "0%": { backgroundPosition: "-200% center" },          "100%": { backgroundPosition: "200% center" } },
+      },
+    },
+  },
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/container-queries'),
+  ],
+}

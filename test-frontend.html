@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend-Backend Connection Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-card {
+      background: white;
+      padding: 20px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    .pending { background: #fff3cd; color: #856404; }
+    button {
+      background: #E85D26;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover { background: #d04d1a; }
+    pre {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+    h1 { color: #E85D26; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Mayur Paints - Connection Test</h1>
+  
+  <div class="test-card">
+    <h3>Backend Status</h3>
+    <button onclick="testHealth()">Test Health Check</button>
+    <div id="health-result"></div>
+  </div>
+
+  <div class="test-card">
+    <h3>Authentication</h3>
+    <button onclick="testLogin()">Test Admin Login</button>
+    <div id="login-result"></div>
+  </div>
+
+  <div class="test-card">
+    <h3>Products</h3>
+    <button onclick="testPaints()">Get Paints</button>
+    <button onclick="testHardware()">Get Hardware</button>
+    <div id="products-result"></div>
+  </div>
+
+  <div class="test-card">
+    <h3>Frontend Status</h3>
+    <p>Frontend URL: <strong>http://localhost:5173</strong></p>
+    <p>Backend URL: <strong>http://localhost:3001</strong></p>
+    <button onclick="window.location.href='http://localhost:5173'">Open Frontend</button>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3001/api'
+
+    async function testHealth() {
+      const result = document.getElementById('health-result')
+      result.innerHTML = '<span class="status pending">Testing...</span>'
+      
+      try {
+        const res = await fetch(`${API_BASE}/health`)
+        const data = await res.json()
+        
+        result.innerHTML = `
+          <span class="status success">✅ Connected</span>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `
+      } catch (error) {
+        result.innerHTML = `
+          <span class="status error">❌ Failed</span>
+          <pre>${error.message}</pre>
+        `
+      }
+    }
+
+    async function testLogin() {
+      const result = document.getElementById('login-result')
+      result.innerHTML = '<span class="status pending">Testing...</span>'
+      
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: 'admin@mayurpaints.com',
+            password: 'admin123'
+          })
+        })
+        const data = await res.json()
+        
+        if (data.success) {
+          result.innerHTML = `
+            <span class="status success">✅ Login Successful</span>
+            <pre>User: ${data.data.user.name}
+Role: ${data.data.user.role}
+Token: ${data.data.token.substring(0, 20)}...</pre>
+          `
+        } else {
+          result.innerHTML = `
+            <span class="status error">❌ Login Failed</span>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          `
+        }
+      } catch (error) {
+        result.innerHTML = `
+          <span class="status error">❌ Error</span>
+          <pre>${error.message}</pre>
+        `
+      }
+    }
+
+    async function testPaints() {
+      const result = document.getElementById('products-result')
+      result.innerHTML = '<span class="status pending">Loading paints...</span>'
+      
+      try {
+        const res = await fetch(`${API_BASE}/paints`)
+        const data = await res.json()
+        
+        result.innerHTML = `
+          <span class="status success">✅ Found ${data.count} paints</span>
+          <pre>${JSON.stringify(data.data.slice(0, 2), null, 2)}</pre>
+          <p><em>Showing first 2 of ${data.count} products</em></p>
+        `
+      } catch (error) {
+        result.innerHTML = `
+          <span class="status error">❌ Failed</span>
+          <pre>${error.message}</pre>
+        `
+      }
+    }
+
+    async function testHardware() {
+      const result = document.getElementById('products-result')
+      result.innerHTML = '<span class="status pending">Loading hardware...</span>'
+      
+      try {
+        const res = await fetch(`${API_BASE}/hardware`)
+        const data = await res.json()
+        
+        result.innerHTML = `
+          <span class="status success">✅ Found ${data.count} hardware items</span>
+          <pre>${JSON.stringify(data.data.slice(0, 2), null, 2)}</pre>
+          <p><em>Showing first 2 of ${data.count} products</em></p>
+        `
+      } catch (error) {
+        result.innerHTML = `
+          <span class="status error">❌ Failed</span>
+          <pre>${error.message}</pre>
+        `
+      }
+    }
+
+    // Auto-test on load
+    window.addEventListener('load', () => {
+      testHealth()
+    })
+  </script>
+</body>
+</html>
