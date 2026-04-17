@@ -43,7 +43,6 @@ function AdminDashboard({ currentUser, userRole }) {
     try {
       if (activeTab === 'dashboard' || activeTab === 'products') {
         const inv = await inventoryAPI.getSummary()
-        console.log('Inventory data:', inv)
         setInventory(inv)
       }
       if (activeTab === 'dashboard' || activeTab === 'orders') {
@@ -58,10 +57,7 @@ function AdminDashboard({ currentUser, userRole }) {
       if (activeTab === 'alerts') {
         const al = await alertsAPI.getLowStock(); setAlerts(al)
       }
-    } catch (e) { 
-      console.error('Admin load error:', e)
-      console.error('Error details:', e.message)
-    }
+    } catch (e) { console.error('Admin load error:', e) }
     setLoading(false)
   }
 
@@ -220,16 +216,6 @@ function AdminDashboard({ currentUser, userRole }) {
                     <div>
                       <h3 className="font-bold text-lg">Product Management</h3>
                       <p className="text-sm text-slate-500">{inventory.totalProducts} products · Stock Value: ₹{(inventory.totalStockValue/100000).toFixed(1)}L</p>
-                      {process.env.NODE_ENV === 'development' && (
-                        <div className="text-xs text-amber-400 mt-2 space-y-1">
-                          <p>DEBUG: filteredProducts.length={filteredProducts.length}</p>
-                          <p>inventory.products.length={inventory.products?.length}</p>
-                          <p>productFilter="{productFilter}"</p>
-                          {inventory.products?.[0] && (
-                            <p>Sample product type: "{inventory.products[0].type}" (typeof: {typeof inventory.products[0].type})</p>
-                          )}
-                        </div>
-                      )}
                     </div>
                     <div className="flex gap-1 bg-slate-800 rounded-xl p-1">
                       {['All','Paint','Hardware'].map((f) => (
