@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs'
 
 dotenv.config()
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mayurpaints'
+const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mayurpaints'
 
 // Real Indian Paint Brand Data
 const paintBrands = ['Asian Paints', 'Berger Paints', 'Nerolac', 'Dulux', 'Indigo Paints', 'Nippon Paint']
