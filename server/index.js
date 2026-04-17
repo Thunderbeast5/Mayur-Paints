@@ -52,8 +52,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174', 
   'http://localhost:3000',
-  // Add your production frontend URL here after deployment
-  // Example: 'https://mayurpaints.vercel.app'
+  'https://mayur-paints.onrender.com',  // Production frontend
 ]
 
 app.use(cors({
