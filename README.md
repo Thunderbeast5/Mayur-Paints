@@ -4,7 +4,7 @@ A full-stack e-commerce web application for **Mayur Paints**, a paint and hardwa
 
 ---
 
-## ✨ Features
+## ✨ Feature
 
 ### Customer-Facing
 - **Product Catalog** — Browse paints and hardware with search, category filters, and price range filters.
